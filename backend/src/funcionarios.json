@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1778031737203,
+    "nome": "bruna",
+    "matricula": "001",
+    "cargo": "operadora"
+  },
+  {
+    "id": 1778031803718,
+    "nome": "fernanda",
+    "matricula": "002",
+    "cargo": "operadora"
+  },
+  {
+    "id": 1778032113123,
+    "nome": "will",
+    "matricula": "003",
+    "cargo": "operador"
+  }
+]

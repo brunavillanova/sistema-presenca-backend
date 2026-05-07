@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "usuario": "admin",
+    "senha": "123456",
+    "tipo": "admin"
+  },
+  {
+    "id": 2,
+    "usuario": "funcionario",
+    "senha": "123456",
+    "tipo": "funcionario"
+  }
+]
