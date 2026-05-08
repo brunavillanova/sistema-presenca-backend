@@ -15,6 +15,10 @@ import api from "../services/api";
 
 import empresa from "../assets/empresa.png";
 
+import InputAdornment from "@mui/material/InputAdornment";
+
+import IconButton from "@mui/material/IconButton";
+
 function Login() {
 
   const navigate = useNavigate();
@@ -24,6 +28,9 @@ function Login() {
 
   const [senha, setSenha] =
     useState("");
+
+  const [mostrarSenha, setMostrarSenha] =
+    useState(false);
 
   const [erro, setErro] =
     useState("");
@@ -50,12 +57,16 @@ function Login() {
         response.data.usuario.tipo ===
         "admin"
       ) {
+
         navigate("/dashboard");
+
       }
 
       // FUNCIONÁRIO
       else {
+
         navigate("/presencas");
+
       }
 
     } catch (error: any) {
@@ -81,6 +92,7 @@ function Login() {
       }}
     >
       <Card sx={{ width: 400 }}>
+
         <CardContent>
 
           <Box
@@ -90,15 +102,17 @@ function Login() {
               mb: 2,
             }}
           >
-           <img
-            src={empresa}
-            alt="Logo Empresa"
-            style={{
-              width: 120,
-              height: 120,
-              objectFit: "contain",
-            }}
-          />
+
+            <img
+              src={empresa}
+              alt="Logo Empresa"
+              style={{
+                width: 120,
+                height: 120,
+                objectFit: "contain",
+              }}
+            />
+
           </Box>
 
           <Typography
@@ -120,6 +134,7 @@ function Login() {
               gap: 2,
             }}
           >
+
             <TextField
               label="Usuário"
               value={usuario}
@@ -132,13 +147,38 @@ function Login() {
 
             <TextField
               label="Senha"
-              type="password"
+              type={
+                mostrarSenha
+                  ? "text"
+                  : "password"
+              }
               value={senha}
               onChange={(e) =>
                 setSenha(
                   e.target.value
                 )
               }
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+
+                      <IconButton
+                        onClick={() =>
+                          setMostrarSenha(
+                            !mostrarSenha
+                          )
+                        }
+                      >
+                        {mostrarSenha
+                          ? "🙈"
+                          : "👁️"}
+                      </IconButton>
+
+                    </InputAdornment>
+                  ),
+                },
+              }}
             />
 
             <Button
@@ -149,15 +189,21 @@ function Login() {
             </Button>
 
             {erro && (
+
               <Typography
                 color="error"
               >
                 {erro}
               </Typography>
+
             )}
+
           </Box>
+
         </CardContent>
+
       </Card>
+
     </Box>
   );
 }
