@@ -16,6 +16,7 @@ import {
 
 import DeleteIcon from "@mui/icons-material/Delete";
 
+
 import MainLayout from "../layouts/MainLayout";
 
 import { useEffect, useState } from "react";
@@ -23,32 +24,46 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 
 function Funcionarios() {
+
   const [nome, setNome] = useState("");
   const [matricula, setMatricula] = useState("");
   const [cargo, setCargo] = useState("");
 
-  const [funcionarios, setFuncionarios] = useState<any[]>([]);
+  const [editandoId, setEditandoId] =
+    useState<number | null>(null);
+
+  const [funcionarios, setFuncionarios] =
+    useState<any[]>([]);
 
   async function carregarFuncionarios() {
+
     try {
-      const response = await api.get("/funcionarios");
+
+      const response =
+        await api.get("/funcionarios");
 
       setFuncionarios(response.data);
 
     } catch (error) {
+
       console.log(error);
     }
   }
 
   async function cadastrarFuncionario() {
+
     try {
+
       const novoFuncionario = {
         nome,
         matricula,
         cargo,
       };
 
-      await api.post("/funcionarios", novoFuncionario);
+      await api.post(
+        "/funcionarios",
+        novoFuncionario
+      );
 
       await carregarFuncionarios();
 
@@ -57,33 +72,69 @@ function Funcionarios() {
       setCargo("");
 
     } catch (error) {
+
+      console.log(error);
+    }
+  }
+
+  async function editarFuncionario(id: number) {
+
+    try {
+
+      await api.put(`/funcionarios/${id}`, {
+        nome,
+        matricula,
+        cargo,
+      });
+
+      await carregarFuncionarios();
+
+      setNome("");
+      setMatricula("");
+      setCargo("");
+
+      setEditandoId(null);
+
+    } catch (error) {
+
       console.log(error);
     }
   }
 
   async function deletarFuncionario(id: number) {
+
     try {
+
       await api.delete(`/funcionarios/${id}`);
 
       await carregarFuncionarios();
 
     } catch (error) {
+
       console.log(error);
     }
   }
 
   useEffect(() => {
+
     carregarFuncionarios();
+
   }, []);
 
   return (
     <MainLayout>
-      <Typography variant="h4" sx={{ mb: 3 }}>
+
+      <Typography
+        variant="h4"
+        sx={{ mb: 3 }}
+      >
         Funcionários
       </Typography>
 
       <Card sx={{ mb: 3 }}>
+
         <CardContent>
+
           <Box
             sx={{
               display: "flex",
@@ -91,50 +142,99 @@ function Funcionarios() {
               flexWrap: "wrap",
             }}
           >
+
             <TextField
               label="Nome"
               value={nome}
-              onChange={(e) => setNome(e.target.value)}
+              onChange={(e) =>
+                setNome(e.target.value)
+              }
             />
 
             <TextField
               label="Matrícula"
               value={matricula}
-              onChange={(e) => setMatricula(e.target.value)}
+              onChange={(e) =>
+                setMatricula(e.target.value)
+              }
             />
 
             <TextField
               label="Cargo"
               value={cargo}
-              onChange={(e) => setCargo(e.target.value)}
+              onChange={(e) =>
+                setCargo(e.target.value)
+              }
             />
 
             <Button
               variant="contained"
-              onClick={cadastrarFuncionario}
+              onClick={() => {
+
+                if (editandoId) {
+
+                  editarFuncionario(
+                    editandoId
+                  );
+
+                } else {
+
+                  cadastrarFuncionario();
+                }
+              }}
             >
-              Cadastrar
+              {editandoId
+                ? "Salvar"
+                : "Cadastrar"}
             </Button>
+
           </Box>
+
         </CardContent>
+
       </Card>
 
       <Card>
+
         <CardContent>
+
           <TableContainer component={Paper}>
+
             <Table>
+
               <TableHead>
+
                 <TableRow>
-                  <TableCell>Nome</TableCell>
-                  <TableCell>Matrícula</TableCell>
-                  <TableCell>Cargo</TableCell>
-                  <TableCell>Ações</TableCell>
+
+                  <TableCell>
+                    Nome
+                  </TableCell>
+
+                  <TableCell>
+                    Matrícula
+                  </TableCell>
+
+                  <TableCell>
+                    Cargo
+                  </TableCell>
+
+                  <TableCell>
+                    Ações
+                  </TableCell>
+
                 </TableRow>
+
               </TableHead>
 
               <TableBody>
-                {funcionarios.map((funcionario) => (
-                  <TableRow key={funcionario.id}>
+
+                {funcionarios.map(
+                  (funcionario) => (
+
+                  <TableRow
+                    key={funcionario.id}
+                  >
+
                     <TableCell>
                       {funcionario.nome}
                     </TableCell>
@@ -148,24 +248,63 @@ function Funcionarios() {
                     </TableCell>
 
                     <TableCell>
-                      <Button
-                        color="error"
-                        variant="contained"
-                        startIcon={<DeleteIcon />}
-                        onClick={() =>
-                          deletarFuncionario(funcionario.id)
-                        }
+
+                      <Box
+                        sx={{
+                          display: "flex",
+                          gap: 1,
+                        }}
                       >
-                        Excluir
+
+                    <Button
+                        color="warning"
+                        variant="contained"
+                        onClick={() => {
+
+                          setNome(funcionario.nome);
+
+                          setMatricula(funcionario.matricula);
+
+                          setCargo(funcionario.cargo);
+
+                          setEditandoId(funcionario.id);
+                        }}
+                      >
+                        EDITAR
                       </Button>
+
+                        <Button
+                          color="error"
+                          variant="contained"
+                          startIcon={
+                            <DeleteIcon />
+                          }
+                          onClick={() =>
+                            deletarFuncionario(
+                              funcionario.id
+                            )
+                          }
+                        >
+                          Excluir
+                        </Button>
+
+                      </Box>
+
                     </TableCell>
+
                   </TableRow>
                 ))}
+
               </TableBody>
+
             </Table>
+
           </TableContainer>
+
         </CardContent>
+
       </Card>
+
     </MainLayout>
   );
 }

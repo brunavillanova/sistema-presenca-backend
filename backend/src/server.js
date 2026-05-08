@@ -111,6 +111,39 @@ app.delete(
   }
 );
 
+app.put("/funcionarios/:id", async (req, res) => {
+
+  try {
+
+    const { id } = req.params;
+
+    const { nome, matricula, cargo } =
+      req.body;
+
+    const { error } = await supabase
+      .from("funcionarios")
+      .update({
+        nome,
+        matricula,
+        cargo,
+      })
+      .eq("id", id);
+
+    if (error) {
+      return res.status(500).json(error);
+    }
+
+    res.json({
+      mensagem:
+        "Funcionário atualizado com sucesso",
+    });
+
+  } catch (error) {
+
+    res.status(500).json(error);
+  }
+});
+
 // =========================
 // PRESENÇAS
 // =========================

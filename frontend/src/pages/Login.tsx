@@ -13,6 +13,8 @@ import { useNavigate } from "react-router-dom";
 
 import api from "../services/api";
 
+import empresa from "../assets/empresa.png";
+
 function Login() {
 
   const navigate = useNavigate();
@@ -81,9 +83,30 @@ function Login() {
       <Card sx={{ width: 400 }}>
         <CardContent>
 
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mb: 2,
+            }}
+          >
+           <img
+            src={empresa}
+            alt="Logo Empresa"
+            style={{
+              width: 120,
+              height: 120,
+              objectFit: "contain",
+            }}
+          />
+          </Box>
+
           <Typography
             variant="h4"
-            sx={{ mb: 3 }}
+            sx={{
+              mb: 3,
+              textAlign: "center",
+            }}
           >
             Login
           </Typography>
