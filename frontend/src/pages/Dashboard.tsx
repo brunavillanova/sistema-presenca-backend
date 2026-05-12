@@ -35,6 +35,9 @@ function Dashboard() {
       // PRESENÇAS
       const responsePresencas =
         await api.get("/presencas");
+        console.log(
+        responsePresencas.data
+      );
 
      const hoje = new Date();
 
