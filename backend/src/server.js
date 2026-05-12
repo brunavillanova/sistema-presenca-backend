@@ -186,11 +186,23 @@ app.post(
     const agora =
       new Date();
 
-    const data =
-     agora.toLocaleDateString("pt-BR");
+   const data =
+    agora.toLocaleDateString(
+    "pt-BR",
+    {
+      timeZone:
+        "America/Sao_Paulo",
+    }
+  );
 
     const hora =
-    agora.toLocaleTimeString("pt-BR");
+    agora.toLocaleTimeString(
+      "pt-BR",
+    {
+      timeZone:
+        "America/Sao_Paulo",
+    }
+  );
 
     // verifica atraso
     const horaAtual =
