@@ -187,10 +187,10 @@ app.post(
       new Date();
 
     const data =
-      agora.toLocaleDateString();
+     agora.toLocaleDateString("pt-BR");
 
     const hora =
-      agora.toLocaleTimeString();
+    agora.toLocaleTimeString("pt-BR");
 
     // verifica atraso
     const horaAtual =
@@ -298,8 +298,8 @@ app.get(
   async (req, res) => {
 
     const hoje =
-      new Date()
-        .toLocaleDateString();
+    new Date()
+    .toLocaleDateString("pt-BR");
 
     const {
       data,
@@ -331,7 +331,7 @@ app.get(
 
     const hoje =
       new Date()
-        .toLocaleDateString();
+        .toLocaleDateString("pt-BR");
 
     const {
       data:
@@ -499,7 +499,7 @@ app.delete(
 
     const hoje =
       new Date()
-        .toLocaleDateString();
+        .toLocaleDateString("pt-BR");
 
     const { error } =
       await supabase
