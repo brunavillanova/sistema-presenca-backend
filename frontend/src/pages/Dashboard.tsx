@@ -41,15 +41,11 @@ function Dashboard() {
 
      const hoje = new Date();
 
-      const mes =
-        String(
-          hoje.getMonth() + 1
-        ).padStart(2, "0");
+     const mes =
+        hoje.getMonth() + 1;
 
       const dia =
-        String(
-          hoje.getDate()
-        ).padStart(2, "0");
+        hoje.getDate();
 
       const ano =
         hoje.getFullYear();
