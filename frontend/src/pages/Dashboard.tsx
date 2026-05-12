@@ -36,15 +36,28 @@ function Dashboard() {
       const responsePresencas =
         await api.get("/presencas");
 
-      const hoje =
-      new Date().toLocaleDateString(
-        "pt-BR"
-      );
+     const hoje = new Date();
+
+      const mes =
+        String(
+          hoje.getMonth() + 1
+        ).padStart(2, "0");
+
+      const dia =
+        String(
+          hoje.getDate()
+        ).padStart(2, "0");
+
+      const ano =
+        hoje.getFullYear();
+
+      const dataHoje =
+        `${mes}/${dia}/${ano}`;
 
       const presencasHoje =
         responsePresencas.data.filter(
           (presenca: any) =>
-            presenca.data === hoje
+            presenca.data === dataHoje
         );
 
       setPresentesHoje(
