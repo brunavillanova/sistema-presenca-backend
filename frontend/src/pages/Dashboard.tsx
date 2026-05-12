@@ -33,35 +33,14 @@ function Dashboard() {
       );
 
       // PRESENÇAS
-      const responsePresencas =
-        await api.get("/presencas");
-        console.log(
-        responsePresencas.data
-      );
+    // PRESENÇAS
+     // PRESENÇAS
+    const responsePresencas =
+      await api.get("/presencas");
 
-     const hoje = new Date();
-
-     const mes =
-        hoje.getMonth() + 1;
-
-      const dia =
-        hoje.getDate();
-
-      const ano =
-        hoje.getFullYear();
-
-      const dataHoje =
-        `${mes}/${dia}/${ano}`;
-
-      const presencasHoje =
-        responsePresencas.data.filter(
-          (presenca: any) =>
-            presenca.data === dataHoje
-        );
-
-      setPresentesHoje(
-        presencasHoje.length
-      );
+    setPresentesHoje(
+      responsePresencas.data.length
+    );
 
     } catch (error) {
       console.log(error);
