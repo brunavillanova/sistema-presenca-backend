@@ -37,7 +37,9 @@ function Dashboard() {
         await api.get("/presencas");
 
       const hoje =
-        new Date().toLocaleDateString();
+      new Date().toLocaleDateString(
+        "pt-BR"
+      );
 
       const presencasHoje =
         responsePresencas.data.filter(
