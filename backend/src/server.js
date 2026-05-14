@@ -37,15 +37,15 @@ app.get("/funcionarios", async (req, res) => {
       .from("funcionarios")
       .select("*");
 
-      if (error) {
+  if (error) {
 
-      console.log(error);
+    console.log(error);
 
-      return res
-        .status(500)
-        .json(error);
+    return res
+      .status(500)
+      .json(error);
 
-    }
+  }
 
   res.json(data);
 });
@@ -111,26 +111,35 @@ app.delete(
   }
 );
 
+// EDITAR FUNCIONÁRIO
 app.put("/funcionarios/:id", async (req, res) => {
 
   try {
 
     const { id } = req.params;
 
-    const { nome, matricula, cargo } =
-      req.body;
+    const {
+      nome,
+      matricula,
+      cargo,
+    } = req.body;
 
-    const { error } = await supabase
-      .from("funcionarios")
-      .update({
-        nome,
-        matricula,
-        cargo,
-      })
-      .eq("id", id);
+    const { error } =
+      await supabase
+        .from("funcionarios")
+        .update({
+          nome,
+          matricula,
+          cargo,
+        })
+        .eq("id", id);
 
     if (error) {
-      return res.status(500).json(error);
+
+      return res
+        .status(500)
+        .json(error);
+
     }
 
     res.json({
@@ -140,7 +149,10 @@ app.put("/funcionarios/:id", async (req, res) => {
 
   } catch (error) {
 
-    res.status(500).json(error);
+    res
+      .status(500)
+      .json(error);
+
   }
 });
 
@@ -148,6 +160,7 @@ app.put("/funcionarios/:id", async (req, res) => {
 // PRESENÇAS
 // =========================
 
+// REGISTRAR PRESENÇA
 app.post(
   "/registrar-presenca",
   async (req, res) => {
@@ -187,10 +200,23 @@ app.post(
       new Date();
 
     const data =
-      agora.toLocaleDateString();
+      agora.toLocaleDateString(
+        "pt-BR",
+        {
+          timeZone:
+            "America/Sao_Paulo",
+        }
+      );
 
     const hora =
-      agora.toLocaleTimeString();
+      agora.toLocaleTimeString(
+        "pt-BR",
+        {
+          timeZone:
+            "America/Sao_Paulo",
+          hour12: false,
+        }
+      );
 
     // verifica atraso
     const horaAtual =
@@ -299,7 +325,13 @@ app.get(
 
     const hoje =
       new Date()
-        .toLocaleDateString();
+        .toLocaleDateString(
+          "pt-BR",
+          {
+            timeZone:
+              "America/Sao_Paulo",
+          }
+        );
 
     const {
       data,
@@ -331,7 +363,13 @@ app.get(
 
     const hoje =
       new Date()
-        .toLocaleDateString();
+        .toLocaleDateString(
+          "pt-BR",
+          {
+            timeZone:
+              "America/Sao_Paulo",
+          }
+        );
 
     const {
       data:
@@ -499,7 +537,13 @@ app.delete(
 
     const hoje =
       new Date()
-        .toLocaleDateString();
+        .toLocaleDateString(
+          "pt-BR",
+          {
+            timeZone:
+              "America/Sao_Paulo",
+          }
+        );
 
     const { error } =
       await supabase
