@@ -323,8 +323,8 @@ function Presencas() {
                 onClick={() => {
 
                   window.open(
-                    "http://localhost:4000/exportar-excel"
-                  );
+                      "https://sistema-presenca-backend.onrender.com/exportar-excel"
+                    );
 
                 }}
               >
