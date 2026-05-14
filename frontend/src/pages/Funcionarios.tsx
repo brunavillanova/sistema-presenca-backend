@@ -16,7 +16,6 @@ import {
 
 import DeleteIcon from "@mui/icons-material/Delete";
 
-
 import MainLayout from "../layouts/MainLayout";
 
 import { useEffect, useState } from "react";
@@ -28,6 +27,9 @@ function Funcionarios() {
   const [nome, setNome] = useState("");
   const [matricula, setMatricula] = useState("");
   const [cargo, setCargo] = useState("");
+
+  const [pesquisa, setPesquisa] =
+    useState("");
 
   const [editandoId, setEditandoId] =
     useState<number | null>(null);
@@ -198,6 +200,20 @@ function Funcionarios() {
 
         <CardContent>
 
+          <TextField
+            label="Pesquisar funcionário"
+            value={pesquisa}
+            onChange={(e) =>
+              setPesquisa(
+                e.target.value
+              )
+            }
+            sx={{
+              mb: 3,
+              width: 300,
+            }}
+          />
+
           <TableContainer component={Paper}>
 
             <Table>
@@ -228,8 +244,16 @@ function Funcionarios() {
 
               <TableBody>
 
-                {funcionarios.map(
-                  (funcionario) => (
+                {funcionarios
+                  .filter((funcionario) =>
+                    funcionario.nome
+                      .toLowerCase()
+                      .includes(
+                        pesquisa.toLowerCase()
+                      )
+                  )
+                  .map(
+                    (funcionario) => (
 
                   <TableRow
                     key={funcionario.id}
@@ -256,22 +280,22 @@ function Funcionarios() {
                         }}
                       >
 
-                    <Button
-                        color="warning"
-                        variant="contained"
-                        onClick={() => {
+                        <Button
+                          color="warning"
+                          variant="contained"
+                          onClick={() => {
 
-                          setNome(funcionario.nome);
+                            setNome(funcionario.nome);
 
-                          setMatricula(funcionario.matricula);
+                            setMatricula(funcionario.matricula);
 
-                          setCargo(funcionario.cargo);
+                            setCargo(funcionario.cargo);
 
-                          setEditandoId(funcionario.id);
-                        }}
-                      >
-                        EDITAR
-                      </Button>
+                            setEditandoId(funcionario.id);
+                          }}
+                        >
+                          EDITAR
+                        </Button>
 
                         <Button
                           color="error"
