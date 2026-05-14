@@ -35,7 +35,10 @@ app.get("/funcionarios", async (req, res) => {
   const { data, error } =
     await supabase
       .from("funcionarios")
-      .select("*");
+      .select("*")
+      .order("nome", {
+        ascending: true,
+      });
 
   if (error) {
 
