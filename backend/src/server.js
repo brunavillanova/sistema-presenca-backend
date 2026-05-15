@@ -366,6 +366,9 @@ app.get(
   "/presencas",
   async (req, res) => {
 
+    const dataSelecionada =
+      req.query.data;
+
     const hoje =
       new Date()
         .toLocaleDateString(
@@ -376,13 +379,16 @@ app.get(
           }
         );
 
+    const dataFiltro =
+      dataSelecionada || hoje;
+
     const {
       data,
       error,
     } = await supabase
       .from("presencas")
       .select("*")
-      .eq("data", hoje)
+      .eq("data", dataFiltro)
       .order("id", {
         ascending: false,
       });
@@ -400,9 +406,13 @@ app.get(
 );
 
 // EXPORTAR EXCEL
+// EXPORTAR EXCEL
 app.get(
   "/exportar-excel",
   async (req, res) => {
+
+    const dataSelecionada =
+      req.query.data;
 
     const hoje =
       new Date()
@@ -414,14 +424,16 @@ app.get(
           }
         );
 
+    const dataFiltro =
+      dataSelecionada || hoje;
+
     const {
-      data:
-        presencas,
+      data: presencas,
       error,
     } = await supabase
       .from("presencas")
       .select("*")
-      .eq("data", hoje);
+      .eq("data", dataFiltro);
 
     if (
       error ||
@@ -432,7 +444,7 @@ app.get(
         .status(404)
         .json({
           mensagem:
-            "Nenhuma presença encontrada hoje",
+            "Nenhuma presença encontrada",
         });
 
     }
@@ -462,22 +474,34 @@ app.get(
       },
 
       {
-        header: "Data",
-        key: "data",
+        header:
+          "Data",
+        key:
+          "data",
         width: 20,
       },
 
       {
         header:
           "Hora Entrada",
-        key: "hora",
+        key:
+          "hora",
         width: 20,
       },
 
       {
         header:
           "Status",
-        key: "status",
+        key:
+          "status",
+        width: 20,
+      },
+
+      {
+        header:
+          "Atraso",
+        key:
+          "atraso",
         width: 20,
       },
     ];
@@ -486,6 +510,7 @@ app.get(
       (presenca) => {
 
         worksheet.addRow({
+
           nome:
             presenca.nome,
 
@@ -500,6 +525,9 @@ app.get(
 
           status:
             presenca.status,
+
+          atraso:
+            presenca.atraso,
         });
 
       }
@@ -512,17 +540,14 @@ app.get(
 
     res.setHeader(
       "Content-Disposition",
-      "attachment; filename=presencas.xlsx"
+      'attachment; filename="presencas.xlsx"'
     );
 
-    await workbook.xlsx.write(
-      res
-    );
+    await workbook.xlsx.write(res);
 
     res.end();
   }
 );
-
 // LOGIN
 app.post(
   "/login",

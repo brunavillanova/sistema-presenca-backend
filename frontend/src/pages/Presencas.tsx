@@ -29,6 +29,9 @@ function Presencas() {
   const [matricula, setMatricula] =
     useState("");
 
+  const [dataFiltro, setDataFiltro] =
+    useState("");
+
   const [presencas, setPresencas] =
     useState<any[]>([]);
 
@@ -43,32 +46,11 @@ function Presencas() {
     try {
 
       const response =
-        await api.get("/presencas");
+        await api.get(
+          `/presencas?data=${dataFiltro}`
+        );
 
       setPresencas(response.data);
-
-    } catch (error) {
-
-      console.log(error);
-
-    }
-  }
-
-  async function limparPresencas() {
-
-    const confirmar = window.confirm(
-      "Deseja apagar todas as presenças do dia?"
-    );
-
-    if (!confirmar) return;
-
-    try {
-
-      await api.delete(
-        "/limpar-presencas"
-      );
-
-      setPresencas([]);
 
     } catch (error) {
 
@@ -104,6 +86,12 @@ function Presencas() {
 
         hora:
           response.data.presenca.hora,
+
+        status:
+          response.data.presenca.status,
+
+        atraso:
+          response.data.presenca.atraso,
       });
 
       setMatricula("");
@@ -131,7 +119,7 @@ function Presencas() {
 
     carregarPresencas();
 
-  }, []);
+  }, [dataFiltro]);
 
   return (
 
@@ -277,6 +265,22 @@ function Presencas() {
                           }
                         </Typography>
 
+                        <Typography>
+                          Status:
+                          {" "}
+                          {
+                            confirmacao.status
+                          }
+                        </Typography>
+
+                        <Typography>
+                          Atraso:
+                          {" "}
+                          {
+                            confirmacao.atraso
+                          }
+                        </Typography>
+
                       </CardContent>
                     </Card>
 
@@ -314,34 +318,82 @@ function Presencas() {
                 gap: 2,
 
                 mb: 3,
+
+                alignItems: "center",
+
+                flexWrap: "wrap",
               }}
             >
 
-              <Button
-                variant="outlined"
+              <TextField
+                type="date"
+                onChange={(e) => {
 
-                onClick={() => {
-
-                  window.open(
-                      "https://sistema-presenca-backend.onrender.com/exportar-excel"
+                  const data =
+                    new Date(
+                      e.target.value
                     );
 
+                  const dia =
+                    String(
+                      data.getDate()
+                    ).padStart(2, "0");
+
+                  const mes =
+                    String(
+                      data.getMonth() + 1
+                    ).padStart(2, "0");
+
+                  const ano =
+                    data.getFullYear();
+
+                  const dataFormatada =
+                    `${dia}/${mes}/${ano}`;
+
+                  setDataFiltro(
+                    dataFormatada
+                  );
+                }}
+              />
+
+             <Button
+              variant="outlined"
+
+              onClick={() => {
+
+                const link =
+                  document.createElement("a");
+
+                link.href =
+                  `https://sistema-presenca-backend.onrender.com/exportar-excel?data=${dataFiltro}`;
+
+                link.download =
+                  "presencas.xlsx";
+
+                document.body.appendChild(
+                  link
+                );
+
+                link.click();
+
+                document.body.removeChild(
+                  link
+                );
+
+              }}
+            >
+              Baixar Excel
+            </Button>
+
+              <Typography
+                sx={{
+                  fontWeight: "bold",
                 }}
               >
-                Baixar Excel
-              </Button>
-
-              <Button
-                variant="contained"
-
-                color="error"
-
-                onClick={
-                  limparPresencas
-                }
-              >
-                Limpar Presenças
-              </Button>
+                Total presentes:
+                {" "}
+                {presencas.length}
+              </Typography>
 
             </Box>
 
@@ -376,52 +428,69 @@ function Presencas() {
                           Hora
                         </TableCell>
 
+                        <TableCell>
+                          Status
+                        </TableCell>
+
+                        <TableCell>
+                          Atraso
+                        </TableCell>
+
                       </TableRow>
                     </TableHead>
 
                     <TableBody>
 
-                      {presencas
-                        .slice(-10)
-                        .reverse()
-                        .map(
-                          (
-                            presenca,
-                            index
-                          ) => (
+                      {presencas.map(
+                        (
+                          presenca,
+                          index
+                        ) => (
 
-                            <TableRow
-                              key={index}
-                            >
+                          <TableRow
+                            key={index}
+                          >
 
-                              <TableCell>
-                                {
-                                  presenca.nome
-                                }
-                              </TableCell>
+                            <TableCell>
+                              {
+                                presenca.nome
+                              }
+                            </TableCell>
 
-                              <TableCell>
-                                {
-                                  presenca.matricula
-                                }
-                              </TableCell>
+                            <TableCell>
+                              {
+                                presenca.matricula
+                              }
+                            </TableCell>
 
-                              <TableCell>
-                                {
-                                  presenca.data
-                                }
-                              </TableCell>
+                            <TableCell>
+                              {
+                                presenca.data
+                              }
+                            </TableCell>
 
-                              <TableCell>
-                                {
-                                  presenca.hora
-                                }
-                              </TableCell>
+                            <TableCell>
+                              {
+                                presenca.hora
+                              }
+                            </TableCell>
 
-                            </TableRow>
+                            <TableCell>
+                              {
+                                presenca.status
+                              }
+                            </TableCell>
 
-                          )
-                        )}
+                            <TableCell>
+                              {
+                                presenca.atraso
+                              }
+                            </TableCell>
+
+                          </TableRow>
+
+                        )
+                      )}
 
                     </TableBody>
 
