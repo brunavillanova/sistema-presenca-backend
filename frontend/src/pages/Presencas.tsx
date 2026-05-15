@@ -1,3 +1,5 @@
+import Autocomplete from "@mui/material/Autocomplete";
+
 import {
   Box,
   Button,
@@ -20,14 +22,22 @@ import MainLayout from "../layouts/MainLayout";
 
 import api from "../services/api";
 
+import empresa from "../assets/empresa.png";
+
 function Presencas() {
 
   const usuario = JSON.parse(
     localStorage.getItem("usuario") || "{}"
   );
 
+  const [nome, setNome] =
+    useState("");
+
   const [matricula, setMatricula] =
     useState("");
+
+  const [funcionarios, setFuncionarios] =
+    useState<any[]>([]);
 
   const [dataFiltro, setDataFiltro] =
     useState("");
@@ -40,6 +50,26 @@ function Presencas() {
 
   const [erro, setErro] =
     useState("");
+
+  async function carregarFuncionarios() {
+
+    try {
+
+      const response =
+        await api.get(
+          "/funcionarios"
+        );
+
+      setFuncionarios(
+        response.data
+      );
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+  }
 
   async function carregarPresencas() {
 
@@ -94,6 +124,8 @@ function Presencas() {
           response.data.presenca.atraso,
       });
 
+      setNome("");
+
       setMatricula("");
 
       carregarPresencas();
@@ -119,6 +151,8 @@ function Presencas() {
 
     carregarPresencas();
 
+    carregarFuncionarios();
+
   }, [dataFiltro]);
 
   return (
@@ -138,6 +172,26 @@ function Presencas() {
           pt: 4,
         }}
       >
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            mb: 2,
+          }}
+        >
+
+          <img
+            src={empresa}
+            alt="Logo Empresa"
+            style={{
+              width: 120,
+              height: 120,
+              objectFit: "contain",
+            }}
+          />
+
+        </Box>
 
         {/* FUNCIONÁRIO */}
         {usuario.tipo !== "admin" && (
@@ -174,16 +228,35 @@ function Presencas() {
                   }}
                 >
 
-                  <TextField
-                    label="Digite a matrícula"
+                  <Autocomplete
+                    options={funcionarios}
 
-                    value={matricula}
-
-                    onChange={(e) =>
-                      setMatricula(
-                        e.target.value
-                      )
+                    getOptionLabel={(option) =>
+                      option.nome || ""
                     }
+
+                    onChange={(
+                      _,
+                      value
+                    ) => {
+
+                      setNome(
+                        value?.nome || ""
+                      );
+
+                      setMatricula(
+                        value?.matricula || ""
+                      );
+                    }}
+
+                    renderInput={(params) => (
+
+                      <TextField
+                        {...params}
+                        label="Selecione seu nome"
+                      />
+
+                    )}
                   />
 
                   <Button
@@ -356,34 +429,34 @@ function Presencas() {
                 }}
               />
 
-             <Button
-              variant="outlined"
+              <Button
+                variant="outlined"
 
-              onClick={() => {
+                onClick={() => {
 
-                const link =
-                  document.createElement("a");
+                  const link =
+                    document.createElement("a");
 
-                link.href =
-                  `https://sistema-presenca-backend.onrender.com/exportar-excel?data=${dataFiltro}`;
+                  link.href =
+                    `https://sistema-presenca-backend.onrender.com/exportar-excel?data=${dataFiltro}`;
 
-                link.download =
-                  "presencas.xlsx";
+                  link.download =
+                    "presencas.xlsx";
 
-                document.body.appendChild(
-                  link
-                );
+                  document.body.appendChild(
+                    link
+                  );
 
-                link.click();
+                  link.click();
 
-                document.body.removeChild(
-                  link
-                );
+                  document.body.removeChild(
+                    link
+                  );
 
-              }}
-            >
-              Baixar Excel
-            </Button>
+                }}
+              >
+                Baixar Excel
+              </Button>
 
               <Typography
                 sx={{
