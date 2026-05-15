@@ -30,7 +30,7 @@ function Presencas() {
     localStorage.getItem("usuario") || "{}"
   );
 
-  const [nome, setNome] =
+  const [, setNome] =
     useState("");
 
   const [matricula, setMatricula] =
