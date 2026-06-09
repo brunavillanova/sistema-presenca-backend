@@ -103,26 +103,13 @@ function Presencas() {
           }
         );
 
-      setConfirmacao({
-        nome:
-          response.data.presenca.nome,
-
-        matricula:
-          response.data.presenca
-            .matricula,
-
-        data:
-          response.data.presenca.data,
-
-        hora:
-          response.data.presenca.hora,
-
-        status:
-          response.data.presenca.status,
-
-        atraso:
-          response.data.presenca.atraso,
-      });
+     setConfirmacao({
+      nome: response.data.presenca.nome,
+      matricula: response.data.presenca.matricula,
+      data: response.data.presenca.data,
+      hora: response.data.presenca.hora,
+      status: response.data.presenca.status,
+    });
 
       setNome("");
 
@@ -346,13 +333,7 @@ function Presencas() {
                           }
                         </Typography>
 
-                        <Typography>
-                          Atraso:
-                          {" "}
-                          {
-                            confirmacao.atraso
-                          }
-                        </Typography>
+                       
 
                       </CardContent>
                     </Card>
@@ -488,9 +469,7 @@ function Presencas() {
                           Status
                         </TableCell>
 
-                        <TableCell>
-                          Atraso
-                        </TableCell>
+                       
 
                       </TableRow>
                     </TableHead>
@@ -537,11 +516,7 @@ function Presencas() {
                               }
                             </TableCell>
 
-                            <TableCell>
-                              {
-                                presenca.atraso
-                              }
-                            </TableCell>
+                            
 
                           </TableRow>
 

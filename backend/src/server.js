@@ -221,76 +221,7 @@ app.post(
         }
       );
 
-    // verifica atraso
-    // verifica atraso
-
-const horaBrasil =
-  agora.toLocaleTimeString(
-    "pt-BR",
-    {
-      timeZone:
-        "America/Sao_Paulo",
-      hour12: false,
-    }
-  );
-
-const [
-  horaAtual,
-  minutoAtual,
-] = horaBrasil
-  .split(":")
-  .map(Number);
-
-const limiteHora = 8;
-
-const limiteMinuto = 0;
-
-let status =
-  "No horário";
-
-let atraso =
-  "00:00";
-
-if (
-  horaAtual >
-    limiteHora ||
-
-  (
-    horaAtual ===
-      limiteHora &&
-    minutoAtual >
-      limiteMinuto
-  )
-) {
-
-  status =
-    "Atrasado";
-
-  const minutosAtraso =
-    (
-      horaAtual * 60 +
-      minutoAtual
-    ) -
-    (
-      limiteHora * 60 +
-      limiteMinuto
-    );
-
-  const horas =
-    String(
-      Math.floor(
-        minutosAtraso / 60
-      )
-    ).padStart(2, "0");
-
-  const minutos =
-    String(
-      minutosAtraso % 60
-    ).padStart(2, "0");
-
-  atraso =
-    `${horas}:${minutos}`;
-}
+    let status = "Presente";
 
     // verifica presença duplicada
     const {
@@ -330,7 +261,7 @@ if (
 
       hora,
 
-      status,atraso,
+      status,
     };
 
     // salva no banco
@@ -497,13 +428,7 @@ app.get(
         width: 20,
       },
 
-      {
-        header:
-          "Atraso",
-        key:
-          "atraso",
-        width: 20,
-      },
+     
     ];
 
     presencas.forEach(
@@ -526,8 +451,7 @@ app.get(
           status:
             presenca.status,
 
-          atraso:
-            presenca.atraso,
+        
         });
 
       }
