@@ -400,33 +400,16 @@ function Presencas() {
 
               <TextField
                 type="date"
-                onChange={(e) => {
+              onChange={(e) => {
 
-                  const data =
-                    new Date(
-                      e.target.value
-                    );
+                const [ano, mes, dia] =
+                  e.target.value.split("-");
 
-                  const dia =
-                    String(
-                      data.getDate()
-                    ).padStart(2, "0");
+                setDataFiltro(
+                  `${dia}/${mes}/${ano}`
+                );
 
-                  const mes =
-                    String(
-                      data.getMonth() + 1
-                    ).padStart(2, "0");
-
-                  const ano =
-                    data.getFullYear();
-
-                  const dataFormatada =
-                    `${dia}/${mes}/${ano}`;
-
-                  setDataFiltro(
-                    dataFormatada
-                  );
-                }}
+              }}
               />
 
               <Button
