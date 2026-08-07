@@ -104,12 +104,12 @@ function Presencas() {
         );
 
      setConfirmacao({
-      nome: response.data.presenca.nome,
-      matricula: response.data.presenca.matricula,
-      data: response.data.presenca.data,
-      hora: response.data.presenca.hora,
-      status: response.data.presenca.status,
-    });
+        nome: response.data.presenca.nome,
+        matricula: response.data.presenca.matricula,
+        data: response.data.presenca.data,
+        hora: response.data.presenca.hora,
+        status: response.data.presenca.status,
+      });
 
       setNome("");
 

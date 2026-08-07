@@ -12,6 +12,11 @@ import Presencas from "./pages/Presencas";
 
 import Login from "./pages/Login";
 
+import Afastamentos from "./pages/Afastamentos";
+
+
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -45,6 +50,16 @@ function App() {
           path="/presencas"
           element={<Presencas />}
         />
+
+        <Route
+        path="/registrar-presenca"
+        element={<Presencas />}
+      />
+
+      <Route
+    path="/afastamentos"
+    element={<Afastamentos />}
+/>
 
       </Routes>
     </BrowserRouter>

@@ -133,6 +133,20 @@ function MainLayout({ children }: any) {
 
           )}
 
+          {/* AFASTAMENTOS */}
+          {usuario.tipo === "admin" && (
+
+            <ListItemButton
+              component={Link}
+              to="/afastamentos"
+            >
+              <ListItemText
+                 primary="Controle de Ausências"
+              />
+            </ListItemButton>
+
+          )}
+
           {/* PRESENÇAS */}
           <ListItemButton
             component={Link}

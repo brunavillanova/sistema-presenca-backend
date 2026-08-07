@@ -1,0 +1,16 @@
+[
+  {
+    "matricula": "1001",
+    "tipo": "Ferias",
+    "dataInicio": "2026-08-01",
+    "dataFim": "2026-08-15",
+    "observacao": "Férias anuais"
+  },
+  {
+    "matricula": "1002",
+    "tipo": "Licenca",
+    "dataInicio": "2026-08-03",
+    "dataFim": "2026-08-20",
+    "observacao": "Licença médica"
+  }
+]

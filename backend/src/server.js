@@ -57,10 +57,11 @@ app.get("/funcionarios", async (req, res) => {
 app.post("/funcionarios", async (req, res) => {
 
   const {
-    nome,
-    matricula,
-    cargo,
-  } = req.body;
+  nome,
+  matricula,
+  cargo,
+  situacao,
+} = req.body;
 
   const { data, error } =
     await supabase
@@ -70,6 +71,7 @@ app.post("/funcionarios", async (req, res) => {
           nome,
           matricula,
           cargo,
+          situacao,
         },
       ])
       .select();
@@ -125,6 +127,7 @@ app.put("/funcionarios/:id", async (req, res) => {
       nome,
       matricula,
       cargo,
+      situacao,
     } = req.body;
 
     const { error } =
@@ -134,6 +137,7 @@ app.put("/funcionarios/:id", async (req, res) => {
           nome,
           matricula,
           cargo,
+          situacao,
         })
         .eq("id", id);
 
@@ -198,6 +202,31 @@ app.post(
         });
 
     }
+
+    // Verifica se o funcionário está em algum afastamento
+const hojeISO = new Date().toISOString().split("T")[0];
+
+const { data: afastamento, error: erroAfastamento } =
+  await supabase
+    .from("afastamentos")
+    .select("*")
+    .eq("matricula", matricula)
+    .lte("data_inicio", hojeISO)
+    .gte("data_fim", hojeISO)
+    .maybeSingle();
+
+if (erroAfastamento) {
+  return res.status(500).json({
+    mensagem: "Erro ao verificar afastamentos.",
+  });
+}
+
+if (afastamento) {
+  return res.status(400).json({
+    mensagem: `Funcionário está em ${afastamento.tipo}.`,
+    afastamento,
+  });
+}
 
     const agora =
       new Date();
@@ -366,6 +395,12 @@ app.get(
       .select("*")
       .eq("data", dataFiltro);
 
+    const {
+      data: funcionarios
+    } = await supabase
+      .from("funcionarios")
+      .select("*");
+
     if (
       error ||
       !presencas.length
@@ -427,35 +462,49 @@ app.get(
           "status",
         width: 20,
       },
+      {
+      header: "Situação",
+      key: "situacao",
+      width: 20,
+    },
 
      
     ];
+presencas.forEach(
+  (presenca) => {
 
-    presencas.forEach(
-      (presenca) => {
+    const funcionario =
+      funcionarios.find(
+        (f) =>
+          f.matricula ===
+          presenca.matricula
+      );
 
-        worksheet.addRow({
+    worksheet.addRow({
 
-          nome:
-            presenca.nome,
+      nome:
+        presenca.nome,
 
-          matricula:
-            presenca.matricula,
+      matricula:
+        presenca.matricula,
 
-          data:
-            presenca.data,
+      data:
+        presenca.data,
 
-          hora:
-            presenca.hora,
+      hora:
+        presenca.hora,
 
-          status:
-            presenca.status,
+      status:
+        presenca.status,
 
-        
-        });
+      situacao:
+        funcionario?.situacao ||
+        "Ativo",
 
-      }
-    );
+    });
+
+  }
+);
 
     res.setHeader(
       "Content-Type",
@@ -472,6 +521,93 @@ app.get(
     res.end();
   }
 );
+
+// CADASTRAR AFASTAMENTO
+app.post("/afastamentos", async (req, res) => {
+
+  const {
+    matricula,
+    tipo,
+    data_inicio,
+    data_fim,
+    observacao,
+  } = req.body;
+// Verifica se já existe um afastamento para o funcionário no mesmo período
+const { data: afastamentoExistente } = await supabase
+  .from("afastamentos")
+  .select("*")
+  .eq("matricula", matricula)
+  .lte("data_inicio", data_fim)
+  .gte("data_fim", data_inicio)
+  .maybeSingle();
+
+if (afastamentoExistente) {
+  return res.status(400).json({
+    mensagem:
+      "Este funcionário já possui um afastamento nesse período.",
+  });
+}
+  const { data, error } = await supabase
+    .from("afastamentos")
+    .insert([
+      {
+        matricula,
+        tipo,
+        data_inicio,
+        data_fim,
+        observacao,
+      },
+    ])
+    .select();
+
+  if (error) {
+    return res.status(500).json(error);
+  }
+
+  res.json(data[0]);
+
+});
+
+// LISTAR AFASTAMENTOS
+app.get("/afastamentos", async (req, res) => {
+
+  const { data, error } = await supabase
+    .from("afastamentos")
+    .select("*")
+    .order("data_inicio", { ascending: false });
+
+ if (error) {
+  console.error("Erro ao cadastrar afastamento:", error);
+
+  return res.status(500).json({
+    mensagem: error.message,
+    erro: error,
+  });
+}
+
+  res.json(data);
+
+});
+
+// EXCLUIR AFASTAMENTO
+app.delete("/afastamentos/:id", async (req, res) => {
+
+  const { id } = req.params;
+
+  const { error } = await supabase
+    .from("afastamentos")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    return res.status(500).json(error);
+  }
+
+  res.json({
+    mensagem: "Afastamento removido com sucesso"
+  });
+
+});
 // LOGIN
 app.post(
   "/login",

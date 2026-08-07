@@ -27,6 +27,8 @@ function Funcionarios() {
   const [nome, setNome] = useState("");
   const [matricula, setMatricula] = useState("");
   const [cargo, setCargo] = useState("");
+ 
+  useState("");
 
   const [pesquisa, setPesquisa] =
     useState("");
@@ -56,11 +58,12 @@ function Funcionarios() {
 
     try {
 
-      const novoFuncionario = {
-        nome,
-        matricula,
-        cargo,
-      };
+     const novoFuncionario = {
+      nome,
+      matricula,
+      cargo,
+      
+    };
 
       await api.post(
         "/funcionarios",
@@ -72,28 +75,7 @@ function Funcionarios() {
       setNome("");
       setMatricula("");
       setCargo("");
-
-    } catch (error) {
-
-      console.log(error);
-    }
-  }
-
-  async function editarFuncionario(id: number) {
-
-    try {
-
-      await api.put(`/funcionarios/${id}`, {
-        nome,
-        matricula,
-        cargo,
-      });
-
-      await carregarFuncionarios();
-
-      setNome("");
-      setMatricula("");
-      setCargo("");
+      
 
       setEditandoId(null);
 
@@ -102,6 +84,32 @@ function Funcionarios() {
       console.log(error);
     }
   }
+
+async function editarFuncionario(id: number) {
+
+  try {
+
+    await api.put(`/funcionarios/${id}`, {
+      nome,
+      matricula,
+      cargo,
+      
+    });
+
+    await carregarFuncionarios();
+
+    setNome("");
+    setMatricula("");
+    setCargo("");
+    
+
+    setEditandoId(null);
+
+  } catch (error) {
+
+    console.log(error);
+  }
+}
 
   async function deletarFuncionario(id: number) {
 
@@ -168,6 +176,7 @@ function Funcionarios() {
                 setCargo(e.target.value)
               }
             />
+           
 
             <Button
               variant="contained"
@@ -234,6 +243,7 @@ function Funcionarios() {
                     Cargo
                   </TableCell>
 
+
                   <TableCell>
                     Ações
                   </TableCell>
@@ -271,6 +281,8 @@ function Funcionarios() {
                       {funcionario.cargo}
                     </TableCell>
 
+             
+
                     <TableCell>
 
                       <Box
@@ -279,23 +291,30 @@ function Funcionarios() {
                           gap: 1,
                         }}
                       >
+                    <Button
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
 
-                        <Button
-                          color="warning"
-                          variant="contained"
-                          onClick={() => {
+                        setNome(funcionario.nome);
 
-                            setNome(funcionario.nome);
+                        setMatricula(
+                          funcionario.matricula
+                        );
 
-                            setMatricula(funcionario.matricula);
+                        setCargo(
+                          funcionario.cargo
+                        );
 
-                            setCargo(funcionario.cargo);
+                       
 
-                            setEditandoId(funcionario.id);
-                          }}
-                        >
-                          EDITAR
-                        </Button>
+                        setEditandoId(
+                          funcionario.id
+                        );
+                      }}
+                    >
+                      EDITAR
+                    </Button>
 
                         <Button
                           color="error"
