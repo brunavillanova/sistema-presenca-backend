@@ -3,98 +3,37 @@ import {
   Button,
   Card,
   CardContent,
-  TextField,
   Typography,
 } from "@mui/material";
 
-import { useState } from "react";
-
 import { useNavigate } from "react-router-dom";
 
-import api from "../services/api";
-
-import empresa from "../assets/empresa.png";
-
-import InputAdornment from "@mui/material/InputAdornment";
-
-import IconButton from "@mui/material/IconButton";
-
 function Login() {
-
   const navigate = useNavigate();
 
-  const [usuario, setUsuario] =
-    useState("");
-
-  const [senha, setSenha] =
-    useState("");
-
-  const [mostrarSenha, setMostrarSenha] =
-    useState(false);
-
-  const [erro, setErro] =
-    useState("");
-
-  async function fazerLogin() {
-
-    try {
-
-      const response =
-        await api.post("/login", {
-          usuario,
-          senha,
-        });
-
-      localStorage.setItem(
-        "usuario",
-        JSON.stringify(
-          response.data.usuario
-        )
-      );
-
-      // ADMIN
-      if (
-        response.data.usuario.tipo ===
-        "admin"
-      ) {
-
-        navigate("/dashboard");
-
-      }
-
-      // FUNCIONÁRIO
-      else {
-
-        navigate("/presencas");
-
-      }
-
-    } catch (error: any) {
-
-      setErro(
-        error.response?.data?.mensagem
-      );
-    }
+  function entrar() {
+    navigate("/presencas");
   }
 
   return (
     <Box
       sx={{
         minHeight: "100vh",
-
         display: "flex",
-
         justifyContent: "center",
-
         alignItems: "center",
-
         backgroundColor: "#f5f5f5",
       }}
     >
-      <Card sx={{ width: 400 }}>
-
+      <Card
+        sx={{
+          width: 400,
+          maxWidth: "90%",
+        }}
+      >
         <CardContent>
 
+          {/* LOGO FICTÍCIO */}
           <Box
             sx={{
               display: "flex",
@@ -102,108 +41,66 @@ function Login() {
               mb: 2,
             }}
           >
-
-            <img
-              src={empresa}
-              alt="Logo Empresa"
-              style={{
-                width: 120,
-                height: 120,
-                objectFit: "contain",
+            <Box
+              sx={{
+                width: 90,
+                height: 90,
+                borderRadius: "50%",
+                backgroundColor: "#7b001c",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "white",
+                fontSize: 32,
+                fontWeight: 700,
               }}
-            />
-
+            >
+              TP
+            </Box>
           </Box>
 
+          {/* NOME DA EMPRESA */}
           <Typography
             variant="h4"
             sx={{
-              mb: 3,
+              mb: 1,
               textAlign: "center",
+              fontWeight: 700,
+              color: "#7b001c",
             }}
           >
-            Login
+            TechPoint
           </Typography>
 
-          <Box
+          <Typography
             sx={{
-              display: "flex",
-
-              flexDirection: "column",
-
-              gap: 2,
+              mb: 3,
+              textAlign: "center",
+              color: "#666",
             }}
           >
+            Sistema de Presença
+          </Typography>
 
-            <TextField
-              label="Usuário"
-              value={usuario}
-              onChange={(e) =>
-                setUsuario(
-                  e.target.value
-                )
-              }
-            />
+          {/* BOTÃO */}
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={entrar}
+            sx={{
+              backgroundColor: "#7b001c",
+              py: 1.5,
 
-            <TextField
-              label="Senha"
-              type={
-                mostrarSenha
-                  ? "text"
-                  : "password"
-              }
-              value={senha}
-              onChange={(e) =>
-                setSenha(
-                  e.target.value
-                )
-              }
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">
-
-                      <IconButton
-                        onClick={() =>
-                          setMostrarSenha(
-                            !mostrarSenha
-                          )
-                        }
-                      >
-                        {mostrarSenha
-                          ? "🙈"
-                          : "👁️"}
-                      </IconButton>
-
-                    </InputAdornment>
-                  ),
-                },
-              }}
-            />
-
-            <Button
-              variant="contained"
-              onClick={fazerLogin}
-            >
-              Entrar
-            </Button>
-
-            {erro && (
-
-              <Typography
-                color="error"
-              >
-                {erro}
-              </Typography>
-
-            )}
-
-          </Box>
+              "&:hover": {
+                backgroundColor: "#5f0016",
+              },
+            }}
+          >
+            Entrar
+          </Button>
 
         </CardContent>
-
       </Card>
-
     </Box>
   );
 }

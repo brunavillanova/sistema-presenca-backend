@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 
 import MainLayout from "../layouts/MainLayout";
-import fundo from "../assets/empresa1.jpg";
+import fundo from "../assets/empresa.png";
 
 import { useEffect, useState } from "react";
 import api from "../services/api";
